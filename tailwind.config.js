@@ -7,13 +7,8 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
-      boxShadow: {
-        'neon-blue': '0 0 10px #0ef, 0 0 20px #0ef, 0 0 30px #0ef',
+      screens: {
+        'small-h': { 'raw': '(max-height: 480px)' }, // Define custom screen size for height
       },
     },
   },

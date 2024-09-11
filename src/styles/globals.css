@@ -8,6 +8,11 @@ body {
   /* To prevent horizontal scroll issues */
   background-color: black;
   color: white;
+  word-break: break-word;
+}
+
+.icon-name {
+  word-break: keep-all;
 }
 
 canvas {
@@ -75,74 +80,6 @@ section {
     /* Additional blue for a softer gradient */
     drop-shadow(4px -4px 8px rgba(197, 118, 246, 0.6));
   /* Additional purple for a softer gradient */
-}
-
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
-  background-color: black;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-}
-
-.loader-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.star {
-  position: relative;
-  width: 50px;
-  height: 50px;
-  background-color: transparent;
-  filter: drop-shadow(-2px 2px 2px rgba(0, 240, 255, 1)) drop-shadow(2px -2px 4px rgba(197, 118, 246, 1)) drop-shadow(-4px 4px 6px rgba(0, 240, 255, 0.6)) drop-shadow(4px -4px 8px rgba(197, 118, 246, 0.6));
-}
-
-.star::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  animation: loader-animation 5s infinite ease-in-out alternate;
-}
-
-@keyframes loader-animation {
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.2;
-  }
-
-  25% {
-    transform: translate(30px, -20px) scale(3);
-    opacity: 0.6;
-  }
-
-  50% {
-    transform: translate(-20px, 40px) scale(5);
-    opacity: 1;
-  }
-
-  75% {
-    transform: translate(40px, 20px) scale(3);
-    opacity: 0.6;
-  }
-
-  100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.2;
-  }
 }
 
 .underline-animation {

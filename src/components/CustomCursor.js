@@ -45,21 +45,31 @@ export default function CustomCursor ()
 
         const updateTouchCursor = ( e ) =>
         {
-            e.preventDefault();
-            const touches = e.touches;
-            for ( let i = 0; i < touches.length; i++ )
+            const touch = e.touches[ 0 ]; // Use the first touch point
+            const currentPosition = { x: touch.clientX, y: touch.clientY };
+
+            createParticlesFromPosition( lastPosition.current, currentPosition );
+            lastPosition.current = currentPosition;
+        };
+
+        const handleTouchStart = ( e ) =>
+        {
+            const touch = e.touches[ 0 ];
+            const currentPosition = { x: touch.clientX, y: touch.clientY };
+            lastPosition.current = currentPosition;
+
+            // Trigger particle creation on touchstart
+            createParticle( currentPosition );
+
+            if ( !animationRef.current )
             {
-                const touch = touches[ i ];
-                const currentPosition = { x: touch.clientX, y: touch.clientY };
-
-                if ( !lastPosition.current )
-                {
-                    lastPosition.current = currentPosition;
-                }
-
-                createParticlesFromPosition( lastPosition.current, currentPosition );
-                lastPosition.current = currentPosition;
+                animateParticles();
             }
+        };
+
+        const handleTouchEnd = () =>
+        {
+            lastPosition.current = null; // Reset the position on touch end
         };
 
         const createParticlesFromPosition = ( start, end ) =>
@@ -159,7 +169,10 @@ export default function CustomCursor ()
             isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             if ( isTouchDevice.current )
             {
-                window.addEventListener( 'touchmove', updateTouchCursor, { passive: false } );
+                window.addEventListener( 'touchstart', handleTouchStart, { passive: true } );
+                window.addEventListener( 'touchmove', updateTouchCursor, { passive: true } );
+                window.addEventListener( 'touchend', handleTouchEnd, { passive: true } );
+                window.addEventListener( 'touchcancel', handleTouchEnd, { passive: true } );
             }
         };
 
@@ -173,7 +186,10 @@ export default function CustomCursor ()
             window.removeEventListener( 'resize', handleResize );
             if ( isTouchDevice.current )
             {
+                window.removeEventListener( 'touchstart', handleTouchStart );
                 window.removeEventListener( 'touchmove', updateTouchCursor );
+                window.removeEventListener( 'touchend', handleTouchEnd );
+                window.removeEventListener( 'touchcancel', handleTouchEnd );
             }
             if ( animationRef.current )
             {

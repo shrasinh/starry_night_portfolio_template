@@ -63,7 +63,24 @@ export default function SkillsChart ( { activeSection } )
 
     return (
         <section id="skills" className="parallax fade-in-out text-center">
-            <h2 className="text-3xl font-bold mb-8">Skills & Projects</h2>
+            <motion.h1
+                className="text-4xl font-extrabold flex justify-center mb-8"
+            >
+                { "Skills & Projects".split( "" ).map( ( letter, index ) => (
+                    <motion.span
+                        key={ index }
+                        initial={ { opacity: 0, rotateX: 90 } } // Start with rotation on X-axis
+                        animate={ { opacity: 1, rotateX: 0 } } // End with no rotation
+                        transition={ {
+                            duration: 1,
+                            delay: index * 0.1, // Stagger animation for each letter
+                        } }
+                    >
+                        { letter === " " ? "\u00A0" : letter } {/* Maintain spaces */ }
+                    </motion.span>
+                ) ) }
+            </motion.h1>
+
             <div className="flex flex-wrap">
                 { projects.map( ( project, index ) => (
                     <motion.div
@@ -94,7 +111,7 @@ export default function SkillsChart ( { activeSection } )
                                     >
                                         { skill.icon }
                                     </div>
-                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full text-xs bg-gray-800 px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="absolute icon-name bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full text-xs bg-gray-800 px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
                                         { skill.name }
                                     </span>
                                 </div>

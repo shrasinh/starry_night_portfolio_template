@@ -1,7 +1,5 @@
 import '@/styles/globals.css';
 import Head from 'next/head';
-import { Suspense } from 'react';
-import Loader from './loading';
 
 export default function MyApp ( { Component, pageProps } )
 {
@@ -10,10 +8,9 @@ export default function MyApp ( { Component, pageProps } )
             <Head>
                 <title>My Portfolio</title>
                 <meta name="language" content="en" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
             </Head>
-            <Suspense fallback={ <Loader /> }>
-                <Component { ...pageProps } />
-            </Suspense>
+            <Component { ...pageProps } />
         </>
     );
 }

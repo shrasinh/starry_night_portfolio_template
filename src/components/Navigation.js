@@ -10,11 +10,9 @@ export default function Navigation ( { activeSection } )
     const handleClick = ( sectionId ) =>
     {
         const sectionElement = document.getElementById( sectionId );
-
         if ( sectionElement )
         {
-            // Instantly scroll to the section
-            const sectionTop = sectionElement.getBoundingClientRect().top + window.scrollY;
+            const sectionTop = sectionElement.getBoundingClientRect().top + window.scrollY - document.querySelector( 'nav' ).getBoundingClientRect().height;
             window.scrollTo( { top: sectionTop, behavior: 'auto' } );
         }
     };
@@ -31,23 +29,39 @@ export default function Navigation ( { activeSection } )
     {
         if ( isOpen )
         {
+            document.body.classList.add( 'overflow-hidden' );
             document.addEventListener( 'mousedown', handleOutsideClick );
-            document.addEventListener( 'touchstart', handleOutsideClick ); // Add touch support
+            document.addEventListener( 'touchstart', handleOutsideClick );
         } else
         {
+            document.body.classList.remove( 'overflow-hidden' );
             document.removeEventListener( 'mousedown', handleOutsideClick );
-            document.removeEventListener( 'touchstart', handleOutsideClick ); // Remove touch support
+            document.removeEventListener( 'touchstart', handleOutsideClick );
         }
 
         return () =>
         {
+            document.body.classList.remove( 'overflow-hidden' );
             document.removeEventListener( 'mousedown', handleOutsideClick );
-            document.removeEventListener( 'touchstart', handleOutsideClick ); // Clean up touch support
+            document.removeEventListener( 'touchstart', handleOutsideClick );
         };
     }, [ isOpen ] );
 
+    const handleDelayedClose = ( sectionId ) =>
+    {
+        handleClick( sectionId );
+        setTimeout( () =>
+        {
+            setIsOpen( false );
+        }, 500 );
+    };
+
     return (
-        <nav className="fixed top-0 w-full bg-black bg-opacity-80 text-white p-4 flex justify-between items-center z-50 shadow-lg backdrop-blur-md">
+        <nav
+            className={ `
+                fixed top-0 w-full bg-black bg-opacity-80 text-white pt-4 px-4 flex justify-between items-center z-50 shadow-lg backdrop-blur-md 
+            small-h:sticky` }
+        >
             <div
                 className="text-2xl font-bold cursor-pointer focus:outline-none hover:animate-pulse"
                 onClick={ () => handleClick( 'about-me' ) }
@@ -86,23 +100,27 @@ export default function Navigation ( { activeSection } )
                 className="md:hidden text-xl focus:outline-none"
                 aria-label={ isOpen ? 'Close menu' : 'Open menu' }
             >
-                { isOpen ? '✖' : '☰' }
+                { isOpen ? '' : '☰' }
             </button>
             <div
                 ref={ offCanvasRef }
-                className={ `fixed top-0 right-0 h-screen bg-gray-900 bg-opacity-80 text-white p-6 transition-transform transform ${ isOpen ? 'translate-x-0' : 'translate-x-full' } md:hidden` }
-                style={ { width: '250px', boxShadow: '0 0 15px rgba(0, 0, 0, 0.8)' } }
+                className={ `fixed overflow-y-auto top-0 right-0 h-screen w-3/4 bg-gray-900 bg-opacity-80 text-white p-6 transition-transform transform ${ isOpen ? 'translate-x-0' : 'translate-x-full' } md:hidden` }
+                style={ { display: 'flex', flexDirection: 'column' } }
             >
-                <button
-                    onClick={ () => setIsOpen( false ) }
-                    className="text-2xl absolute top-4 right-4 focus:outline-none transition-transform transform hover:scale-110"
-                    aria-label="Close menu"
-                >
-                    ✖
-                </button>
-                <div className="flex flex-col justify-center items-center h-full space-y-8">
+                <div className="text-end">
                     <button
-                        onClick={ () => handleClick( 'about-me' ) }
+                        onClick={ () => setIsOpen( false ) }
+                        className="text-2xl focus:outline-none transition-transform transform hover:scale-110"
+                        aria-label="Close menu"
+                    >
+                        ✖
+                    </button>
+                </div>
+
+                {/* Make the content area scrollable with flex-grow */ }
+                <div className="flex-grow flex flex-col justify-center items-center mt-4 space-y-8">
+                    <button
+                        onClick={ () => handleDelayedClose( 'about-me' ) }
                         className={ `block glow-button text-xl text-center py-3 px-4 w-full ${ activeSection === 'about-me' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-xl rounded-full' : 'text-gray-400' }` }
                         aria-label="Navigate to About Me section"
                     >
@@ -110,7 +128,7 @@ export default function Navigation ( { activeSection } )
                     </button>
                     <hr className="w-3/4 border-t-2 border-purple-500 animate-pulse" />
                     <button
-                        onClick={ () => handleClick( 'skills' ) }
+                        onClick={ () => handleDelayedClose( 'skills' ) }
                         className={ `block glow-button text-xl text-center py-3 px-4 w-full ${ activeSection === 'skills' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-xl rounded-full' : 'text-gray-400' }` }
                         aria-label="Navigate to Skills section"
                     >
