@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: sans-serif;
   overflow-x: hidden;
   /* To prevent horizontal scroll issues */
   background-color: black;
   color: white;
   word-break: break-word;
+  word-spacing: 4px;
 }
 
 .icon-name {

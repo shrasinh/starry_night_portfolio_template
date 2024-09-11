@@ -19,7 +19,7 @@ export default function AboutMe ()
                             delay: index * 0.1, // Stagger animation for each letter
                         } }
                     >
-                        { letter === " " ? "\u00A0" : letter } {/* Maintain spaces */ }
+                        { letter === " " ? "\u2002" : letter } {/* Maintain spaces */ }
                     </motion.span>
                 ) ) }
             </motion.h1>
