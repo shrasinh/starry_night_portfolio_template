@@ -56,9 +56,9 @@ Ensure you have the following installed:
 
 4. Start the development server:
    
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
 4. Open `http://localhost:3000` in your browser to view the portfolio.
 
@@ -66,14 +66,14 @@ npm run dev
 
 To build the project for production, run:
 
-```bash
-npm run build
-```
+   ```bash
+   npm run build
+   ```
 
 This will create an optimized production build.
 
 To start the production server:
 
-```bash
-npm start
-```
+   ```bash
+   npm start
+   ```
