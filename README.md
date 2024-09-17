@@ -1,5 +1,7 @@
 # Starry Night Portfolio Template
 
+![demo image for the portfolio](demo_image.png)
+
 This **Next.js** portfolio template forms the base of my personal portfolio, featuring a serene **Starry Night** theme. The background is brought to life with **twinkling stars** and a **shooting star** animation over a black sky. It is customizable and fully responsive, ensuring a great user experience across different devices and screen sizes.
 
 **[View Demo](https://shramana.vercel.app/)**
