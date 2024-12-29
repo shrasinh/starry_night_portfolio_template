@@ -1,151 +1,171 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Navigation ( { activeSection } )
-{
-    const [ isOpen, setIsOpen ] = useState( false );
-    const offCanvasRef = useRef( null );
+export default function Navigation({ activeSection }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const offCanvasRef = useRef(null);
 
-    const handleClick = ( sectionId ) =>
-    {
-        const sectionElement = document.getElementById( sectionId );
-        if ( sectionElement )
-        {
-            const sectionTop = sectionElement.getBoundingClientRect().top + window.scrollY - document.querySelector( 'nav' ).getBoundingClientRect().height;
-            window.scrollTo( { top: sectionTop, behavior: 'auto' } );
-        }
-    };
+  const handleClick = (sectionId) => {
+    const sectionElement = document.getElementById(sectionId);
+    if (sectionElement) {
+      const sectionTop = sectionElement.getBoundingClientRect().top + window.scrollY - document.querySelector('nav').getBoundingClientRect().height;
+      window.scrollTo({ top: sectionTop, behavior: 'auto' });
+    }
+  };
 
-    const handleOutsideClick = ( event ) =>
-    {
-        if ( offCanvasRef.current && !offCanvasRef.current.contains( event.target ) )
-        {
-            setIsOpen( false );
-        }
-    };
+  const handleOutsideClick = (event) => {
+    if (offCanvasRef.current && !offCanvasRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
 
-    useEffect( () =>
-    {
-        if ( isOpen )
-        {
-            document.body.classList.add( 'overflow-hidden' );
-            document.addEventListener( 'mousedown', handleOutsideClick );
-            document.addEventListener( 'touchstart', handleOutsideClick );
-        } else
-        {
-            document.body.classList.remove( 'overflow-hidden' );
-            document.removeEventListener( 'mousedown', handleOutsideClick );
-            document.removeEventListener( 'touchstart', handleOutsideClick );
-        }
+  const handleDelayedClose = (sectionId) => {
+    handleClick(sectionId);
+    setTimeout(() => {
+      setIsOpen(false);
+    }, 500);
+  };
 
-        return () =>
-        {
-            document.body.classList.remove( 'overflow-hidden' );
-            document.removeEventListener( 'mousedown', handleOutsideClick );
-            document.removeEventListener( 'touchstart', handleOutsideClick );
-        };
-    }, [ isOpen ] );
+  const navItems = [
+    { id: 'about-me', label: 'About Me' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'resume', label: 'Resume', href: '/Resume.pdf' }
+  ];
 
-    const handleDelayedClose = ( sectionId ) =>
-    {
-        handleClick( sectionId );
-        setTimeout( () =>
-        {
-            setIsOpen( false );
-        }, 500 );
-    };
-
-    return (
-        <nav
-            className={ `
-                fixed top-0 w-full bg-black bg-opacity-80 text-white pt-4 px-4 flex justify-between items-center z-50 shadow-lg backdrop-blur-md 
-            small-h:sticky` }
-        >
-            <div
-                className="text-2xl font-bold cursor-pointer focus:outline-none hover:animate-pulse"
-                onClick={ () => handleClick( 'about-me' ) }
-                role="button"
-                aria-label="Navigate to About Me section"
+  return (
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: 'spring', stiffness: 100 }}
+      className="fixed top-0 w-full z-50"
+    >
+      <div className="bg-gray-900/80 backdrop-blur-lg shadow-lg border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex-shrink-0"
             >
-                [Your name]
-            </div>
-            <div className="space-x-4 hidden md:flex">
-                <button
-                    onClick={ () => handleClick( 'about-me' ) }
-                    className={ `glow-button px-4 py-2 rounded-lg ${ activeSection === 'about-me' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg' : 'text-gray-400' }` }
-                    aria-label="Navigate to About Me section"
-                >
-                    About Me
-                </button>
-                <button
-                    onClick={ () => handleClick( 'skills' ) }
-                    className={ `glow-button px-4 py-2 rounded-lg ${ activeSection === 'skills' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg' : 'text-gray-400' }` }
-                    aria-label="Navigate to Skills section"
-                >
-                    Skills
-                </button>
-                <a
-                    href="https://example.com/your-resume.pdf"
+              <button
+                onClick={() => handleClick('about-me')}
+                className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 text-transparent bg-clip-text hover:from-purple-400 hover:to-pink-600 transition-all duration-300"
+                aria-label="Navigate to About Me section"
+              >
+                Your Name
+              </button>
+            </motion.div>
+
+            <div className="hidden md:flex md:items-center md:space-x-6">
+              {navItems.map((item) => (
+                item.href ? (
+                  <motion.a
+                    key={item.id}
+                    href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="glow-button px-4 py-2 rounded-lg text-gray-400"
-                    aria-label="View Resume"
-                >
-                    Resume
-                </a>
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-4 py-2 rounded-lg text-gray-300 hover:text-white  hover:bg-gray-800 transition-colors duration-300 glow-button"
+                  >
+                    {item.label}
+                  </motion.a>
+                ) : (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => handleClick(item.id)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                      activeSection === item.id
+                        ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                        : 'text-gray-300 hover:text-white hover:bg-gray-800 glow-button'
+                    }`}
+                  >
+                    {item.label}
+                  </motion.button>
+                )
+              ))}
             </div>
-            <button
-                onClick={ () => setIsOpen( !isOpen ) }
-                className="md:hidden text-xl focus:outline-none"
-                aria-label={ isOpen ? 'Close menu' : 'Open menu' }
-            >
-                { isOpen ? '' : '☰' }
-            </button>
-            <div
-                ref={ offCanvasRef }
-                className={ `fixed overflow-y-auto top-0 right-0 h-screen w-3/4 bg-gray-900 bg-opacity-80 text-white p-6 transition-transform transform ${ isOpen ? 'translate-x-0' : 'translate-x-full' } md:hidden` }
-                style={ { display: 'flex', flexDirection: 'column' } }
-            >
-                <div className="text-end">
-                    <button
-                        onClick={ () => setIsOpen( false ) }
-                        className="text-2xl focus:outline-none transition-transform transform hover:scale-110"
-                        aria-label="Close menu"
-                    >
-                        ✖
-                    </button>
-                </div>
 
-                {/* Make the content area scrollable with flex-grow */ }
-                <div className="flex-grow flex flex-col justify-center items-center mt-4 space-y-8">
-                    <button
-                        onClick={ () => handleDelayedClose( 'about-me' ) }
-                        className={ `block glow-button text-xl text-center py-3 px-4 w-full ${ activeSection === 'about-me' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-xl rounded-full' : 'text-gray-400' }` }
-                        aria-label="Navigate to About Me section"
-                    >
-                        About Me
-                    </button>
-                    <hr className="w-3/4 border-t-2 border-purple-500 animate-pulse" />
-                    <button
-                        onClick={ () => handleDelayedClose( 'skills' ) }
-                        className={ `block glow-button text-xl text-center py-3 px-4 w-full ${ activeSection === 'skills' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-xl rounded-full' : 'text-gray-400' }` }
-                        aria-label="Navigate to Skills section"
-                    >
-                        Skills
-                    </button>
-                    <hr className="w-3/4 border-t-2 border-blue-500 animate-pulse" />
-                    <a
-                        href="https://example.com/your-resume.pdf"
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            >
+              {isOpen ? '✕' : '☰'}
+            </motion.button>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={offCanvasRef}
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 20 }}
+            className="fixed top-0 right-0 h-full w-full md:w-80 bg-gray-900/95 backdrop-blur-lg shadow-xl"
+          >
+            <div className="flex flex-col h-full p-6">
+              <div className="flex justify-end">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800"
+                >
+                  ✕
+                </motion.button>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex-grow flex flex-col justify-center space-y-6"
+              >
+                {navItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {item.href ? (
+                      <a
+                        href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block glow-button text-xl text-center py-3 px-4 w-full text-gray-400"
-                        aria-label="View Resume"
-                    >
-                        Resume
-                    </a>
-                </div>
+                        className="block text-lg text-center py-3 px-4 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 transition-colors duration-300 glow-button"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <button
+                        onClick={() => handleDelayedClose(item.id)}
+                        className={`w-full text-lg py-3 px-4 rounded-lg transition-all duration-300 ${
+                          activeSection === item.id
+                            ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                            : 'text-gray-300 hover:text-white hover:bg-gray-800 glow-button'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    )}
+                  </motion.div>
+                ))}
+              </motion.div>
             </div>
-        </nav>
-    );
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
+  );
 }
