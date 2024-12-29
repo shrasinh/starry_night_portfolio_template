@@ -16,7 +16,7 @@ src/
 │   ├── CustomCursor.js      # Custom animated cursor
 │   ├── Navigation.js        # Navigation bar for the website
 │   ├── ParallaxEffect.js    # Parallax scrolling effect for sections
-│   ├── SkillsChart.js       # Skills bar chart or graph
+│   ├── SkillsChart.js       # Skills and Project section component
 │   └── TwinklingStars.js    # Background animation of twinkling stars
 │
 ├── pages/
