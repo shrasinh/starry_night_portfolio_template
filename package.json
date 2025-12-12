@@ -15,7 +15,7 @@
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
     "framer-motion": "^11.3.28",
-    "next": "^14.2.33",
+    "next": "^14.2.35",
     "postprocessing": "^6.36.0",
     "react": "^18",
     "react-dom": "^18",
